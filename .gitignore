@@ -1,4 +1,5 @@
 node_modules
 bot-test.js
+test-bot.js
 log.txt
 twit.response.txt
