@@ -35,7 +35,7 @@ var retweet = function() {
 };
 
 retweet();
-setInterval(retweet, 1800000);
+setInterval(retweet, 5000);
 
 app.listen(port, function() {
   console.log(`Server is up on port ${port}`);
