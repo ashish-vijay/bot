@@ -7,29 +7,32 @@ var port = process.env.PORT || 3000;
 var twitter = new twit(twitterauth);
 var stream = twitter.stream('user');
 
+var retweeted_id = [];
+
 var retweet = function() {
   var params = {
-    q: '#haveabook OR #og OR #owlgeneration'
+    q: '#haveabook',
+    resul_type: 'recent'
   };
   twitter.get('/search/tweets', params, function(err, data) {
-    if(!err){
+    try{
       var tweetCount = data.statuses.length;
       for(var i = 0; i < tweetCount; i++) {
-        console.log(data.statuses[i].id_str);
         var retweetId = data.statuses[i].id_str;
         twitter.post('/statuses/retweet/:id', {
           id: retweetId,
           }, function(err, response) {
-              if(response) {
+              if(!err) {
                 console.log('Retweeted');
+                retweeted_id.push(data.statuses[i].id_str);
               }
-              else if(err) {
-                console.log('Can\'t retweet', err);
+              if(err) {
+                console.log('Already retweeted, id : ' + retweetId);
               }
             });
       }
     }
-    else {
+    catch(err) {
         console.log('Error in search', err);
     }
   });
@@ -63,5 +66,5 @@ retweet();
 setInterval(retweet, 300000);
 
 app.listen(port, function() {
-  console.log(`Server is up on port ${port}`);
+  console.log(`Server is up on port ${port} at : ` + new Date().getTime());
 });
